@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'RC Car Conceptual Overview'
+copyright = '2024, Mthokozisi \'Hap\' Sibanda'
+author = 'Mthokozisi \'Hap\' Sibanda'
 
 release = '0.1'
 version = '0.1.0'
@@ -30,6 +30,15 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
+
+html_theme_options = {
+    # if we have a html_logo below, this shows /only/ the logo with no title text
+    "logo_only": False,
+    # Collapse navigation (False makes it tree-like)
+    "collapse_navigation": False,
+    # Hide the documentation version name/number under the logo
+    "display_version": True,
+}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
