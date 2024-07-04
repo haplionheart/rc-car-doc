@@ -1,13 +1,19 @@
+.. _home:
+
 RC Car Conceptual Overview
 ==========================
 
+.. _project_background:
+
 Project Background
-==================
+------------------
 
 One of the most memorable toys I received as a child was a radio-controlled (RC) car. I remember being amazed that I could drive the car from a distance instead of pushing it by hand. Even the 'real' cars driven by adults required some manual control, so this RC car seemed like magic to me—a magic I wanted to understand. This document aims to answer some of the questions my younger self would've had about how RC cars work and how to build them.
 
+.. _document_intention:
+
 Intention of this document
-==========================
+--------------------------
 
 This document gives a conceptual overview of the systems used to create an RC car. It uses a prototype RC car I've built as an example.
 
@@ -20,7 +26,7 @@ This document is not a step-by-step tutorial on how to recreate the project. Rat
 
 To understand this document, you must have an understanding of basic electric circuits. In particular you will need to understand the concepts of voltage, current, energy and power. You also need to know the different between Direct Current (DC) and Alternating Current (AC).
 
-Content description here
+This document is organised as follows:
 
 .. toctree::
    :caption: Project Overview
