@@ -3,7 +3,7 @@
 Motor Driver (L298N Module)
 ===========================
 
-.. _driver_description
+.. _driver_description:
 
 Motor Driver Description
 ------------------------

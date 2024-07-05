@@ -53,7 +53,6 @@ This document is organised as follows:
    :name: mobile-application
 
    mobile-application/app-overview
-   mobile-application/app-interface
    mobile-application/app-ble
 
 .. toctree::
