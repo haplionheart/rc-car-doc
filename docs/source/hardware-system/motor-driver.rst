@@ -15,12 +15,12 @@ Motor drivers are circuits that help control motor speed and direction. They're 
 L298N Module Description
 ------------------------
 
-Our example car uses an L298N motor driver module to control the two rear wheels. The L298N takes the following inputs:
-
 .. figure:: ../../../media/images/l298n-module-annotated.jpg
     :width: 600
 
     Labelled view of the L298N motor driver module
+
+Our example car uses an L298N motor driver module to control the two rear wheels. The L298N takes the following inputs:
 
 - ENA and ENB: ENA and ENB: these inputs determine whether motors A and B are enabled. They're also used to control the speed of the motors.
 - IN1 and IN2: these inputs control the direction of motor A
