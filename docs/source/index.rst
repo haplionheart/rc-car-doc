@@ -19,7 +19,6 @@ This document gives a conceptual overview of the systems used to create an RC ca
 
 .. video:: ../../media/videos/car_action_comp.mp4
    :width: 300
-   :autoplay:
 
 This document is not a step-by-step tutorial on how to recreate the project. Rather, this document gives background knowledge on the systems and components used to build RC cars and other robotics projects. As you read the document, hopefully it becomes clear that there are improvements that can be made to the example project. By explaining my design choices and highlighting my design flaws, the hope is that you'll understand what you may need to consider when building your own projects. All the components discussed can be swapped out for alternatives based on part availability and your own design requirements.
 

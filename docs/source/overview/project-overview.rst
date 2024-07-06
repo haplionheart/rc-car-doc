@@ -12,7 +12,6 @@ The example project discussed in this document is an RC car that is controlled b
 
 .. video:: ../../../media/videos/car_action_comp.mp4
    :width: 300
-   :autoplay:
 
 .. _system_overview:
 

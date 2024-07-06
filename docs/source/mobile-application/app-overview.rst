@@ -17,7 +17,6 @@ App Interface
 
 .. video:: ../../../media/videos/rc-car-app-rec-comp.mp4
    :width: 300
-   :autoplay:
 
 Our app uses a single page interface with two components:
 
