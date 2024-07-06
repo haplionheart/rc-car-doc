@@ -45,6 +45,7 @@ html_theme_options = {
 epub_show_urls = 'footnote'
 
 # below table line-wrap fix adapted from: https://github.com/bosilca/ompi/blob/815da65b80d078c3518bd12d447d7a573815a920/docs/conf.py
+# also below added a script to make sure that external links open in a new tab, got it from here: https://stackoverflow.com/questions/11716781/open-a-link-in-a-new-window-in-restructuredtext
 
 # The sphinx_rtd_theme does not properly handle wrapping long lines in
 # table cells when rendering to HTML due to a CSS issue (see
@@ -57,4 +58,12 @@ rst_prolog = """
    <style>
    .wy-table-responsive table td,.wy-table-responsive table th{white-space:normal}
    </style>
+
+   <script type="text/javascript">
+    <!-- Adds target=_blank to external links -->
+
+    $(document).ready(function () {
+      $('a[href^="http://"], a[href^="https://"]').not('a[class*=internal]').attr('target', '_blank');
+    });
+  </script>
 """
