@@ -5,8 +5,8 @@ Microcontroller (STM32 NUCLEO-C031C6)
 
 .. _microcontroller_description:
 
-Microcontroller Descriptions
-----------------------------
+Microcontroller Description
+---------------------------
 
 The microcontroller is the "brain" of our car. Microcontrollers are tiny programmable computers that we use to process data in electronic systems. They read incoming signals, make decisions based on that input and then send outgoing signals to other components. In our case, the microcontroller receives remote control signals and uses those to decide how the car should move.
 
@@ -20,7 +20,7 @@ When prototyping, we usually use "microcontroller boards" which integrate the mi
 .. figure:: ../../../media/images/microcontroller_board_edit.jpg
     :height: 500
 
-    Location of the STM32 Microcontroller on a NUCLEO-C031C6 "microcontroller board"
+    Location of the STM32 microcontroller on a NUCLEO-C031C6 "microcontroller board"
 
 .. _microcontroller_types:
 

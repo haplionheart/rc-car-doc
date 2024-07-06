@@ -3,7 +3,17 @@
 BLE Connection and Data Transfer
 ================================
 
-Different wireless protocols have their own rules for how devices should communicate. Despite having similar names, it is important to note that Bluetooth (also known as 'Bluetooth Classic') and Bluetooth Low Energy are two different protocols, so they also use different rules. We discussed some of the differences between the two protocols in :ref:`bc_vs_ble`.
+.. _wireless_protocols:
+
+Wireless protocols
+------------------
+
+Different wireless protocols have their own rules for how devices should communicate. As Bluetooth ('Bluetooth Classic') and Bluetooth Low Energy are two different protocols, they also use different rules. We discussed some of the other differences between the two in :ref:`bc_vs_ble`.
+
+.. _ble_overview:
+
+Bluetooth Low Energy Overview
+-----------------------------
 
 BLE connections happen between "peripherals" and "central devices". The peripheral is usually a small, low-power device like a fitness tracker or our HM-10 module. A "central device" is usually a more powerful device like a computer or a smartphone. BLE connections happen in the following steps:
 

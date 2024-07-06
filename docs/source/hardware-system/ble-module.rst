@@ -27,10 +27,10 @@ We use an HM-10 BLE module which receives wireless signals from our mobile app a
 Bluetooth Classic vs. Bluetooth Low Energy
 ------------------------------------------
 
-It is important to note that Bluetooth (also known as 'Bluetooth Classic') and Bluetooth Low Energy (BLE) are two different protocols. So while there are "Bluetooth" devices like the ESP32 that support both protocols, that is not always the case. For example, the HM-10 module only supports BLE. The following table shows some of the fundamental differences between the two protocols:
+It is important to note that Bluetooth (also known as 'Bluetooth Classic') and Bluetooth Low Energy (BLE) are two different protocols. So while there are "Bluetooth" devices like the ESP32 that support both protocols, that is not always the case. For example, the HM-10 module only supports BLE. The following table shows some of the differences between the two protocols:
 
 .. list-table:: Comparison between Bluetooth Classic and Bluetooth Low Energy
-    :widths: auto
+    :widths: 50 50
     :header-rows: 1
 
     * 

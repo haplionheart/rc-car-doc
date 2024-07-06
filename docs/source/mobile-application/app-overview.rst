@@ -31,4 +31,6 @@ App Architecture
 
 The app is built using the mobile app framework, React Native. This lets us build an app that we can deploy to both Android and iOS. We also use Expo, a React Native framework that lets us make changes to our code and see the results instantly. This lets us quickly test code changes without reinstalling the app every time.
 
-React Native can have a steep learning curve if you aren't familiar with Javascript. However there are alternative app frameworks that are built to be more beginner-friendly. MIT App Inventor is a popular example as it lets you build apps without writing code. If you don't want to build your own app, there are existing mobile apps you can download that may match your project requirements.
+React Native can have a steep learning curve if you aren't familiar with Javascript. However, there are alternative app frameworks that are built to be more beginner-friendly. MIT App Inventor is a popular example as it lets you build apps without writing code. 
+
+If you don't want to build your own app, there are existing mobile apps you can download that may match your project requirements.

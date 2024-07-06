@@ -25,7 +25,7 @@ Turning the car
 ..
     may need to attach image of an axle here to be more clear
 
-What if we want to turn the car? Traditionally a car's front wheels are attached to an axle that controls the steering. However, our car doesn't have an axle. Instead, our front wheel is a freely-rotating castor wheel like those you find on office chairs—so we can't use it to steer the car. Instead we can steer the car by supplying power to our rear wheels in unequal amounts. If we're moving the car in a straight line, we can reduce power to the left wheel and this will steer the car left.
+What if we want to turn the car? Traditionally a car's front wheels are attached to an axle that controls the steering. However, our car doesn't have an axle. Instead, our front wheel is a freely-rotating castor wheel like those you find on office chairs—so we can't use it to steer the car. Instead we can steer by supplying power to our rear wheels in unequal amounts. If we're moving the car in a straight line, we can reduce power to the left wheel and this will steer the car left.
 
 ..
     I think it would help to have the image of the bottom view of the car again here
