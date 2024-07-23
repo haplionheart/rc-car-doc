@@ -30,6 +30,11 @@ In :ref:`firmware_motor_control`, there is a more detailed explanation of how th
 
 Also note that motor drivers use "H-Bridge" circuits to control a motor's spin direction. The L298N contains two H-Bridge circuits, allowing motor A and B's directions to be controlled independently.
 
+The interactive demo below shows how H-Bridges work by using Motor A's inputs as an example.
+
+.. raw:: html
+    :file: ../_demos_/h-bridge-demo.html
+
 ..
     Want to have an infographic of how these H-Bridges work
 

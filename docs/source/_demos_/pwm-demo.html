@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWM Signal Animation</title>
+    <style>
+        svg {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div style="border-style: solid;">
+        <div style="max-width: 500px;">
+            <svg viewBox="0 0 100 100" id="pwmSvg" width="100%"></svg>
+        </div>
+        
+        <br>
+        Duty Cycle
+        <input type="range" id="dutySlider" min="0" max="100" value="50">
+        <span id="dutyValue">50%</span>
+    </div>
+
+    <script>
+
+        const signalStrokeWidth = 0.6;
+        const axisStrokeWidth = 0.4;
+        const positionNudge = 1.005;
+        const legendCircleRadius = 2;
+        const labelSize = 4.5;
+        const legendTextSize = 4;
+        const signalSpeed = 0.25;
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const signalStartX = 18 ;
+        const svgWidth = 100;
+        const fullSignalWidth = 100;
+        const signalHigh = 10;
+        const signalLow = 80;
+        const periodWidth = fullSignalWidth/4;
+        const signalDimWidth = 100 - signalStartX;
+        const signalDimHeight = signalHigh - signalLow;
+        const pwmLineColour = "springgreen";
+        const avgLineColour = "orangered";
+        const backgroundColour = "#111";
+        const textColour = "white";
+
+        //PWM Graph
+        const svg = document.getElementById("pwmSvg");
+        const dutySlider = document.getElementById("dutySlider");
+        const dutyValue = document.getElementById("dutyValue");
+
+        let baseBackground = document.createElementNS(svgNamespace, "rect");
+        baseBackground.setAttribute("x", 0);
+        baseBackground.setAttribute("y", 0);
+        baseBackground.setAttribute("width", 100);
+        baseBackground.setAttribute("height", 100);
+        baseBackground.setAttribute("fill", backgroundColour);
+        svg.appendChild(baseBackground);
+
+        let pwmPath = document.createElementNS(svgNamespace, "path");
+        pwmPath.setAttribute("stroke", pwmLineColour);
+        pwmPath.setAttribute("stroke-width", signalStrokeWidth);
+        pwmPath.setAttribute("fill", "none");
+        svg.appendChild(pwmPath);
+
+        let offset = 0;
+
+        let averageLine = document.createElementNS(svgNamespace, "line")
+        averageLine.setAttribute("stroke", avgLineColour);
+        averageLine.setAttribute("stroke-dasharray", [2,0.2]);
+        averageLine.setAttribute("stroke-width", signalStrokeWidth);
+        averageLine.setAttribute("fill", "none");
+        averageLine.setAttribute("x1", signalStartX);
+        averageLine.setAttribute("x2", svgWidth);
+        svg.appendChild(averageLine);
+
+        let maskRect = document.createElementNS(svgNamespace, "rect");
+        maskRect.setAttribute("x", 0);
+        maskRect.setAttribute("y", 0);
+        maskRect.setAttribute("width", signalStartX);
+        maskRect.setAttribute("height", 100);
+        maskRect.setAttribute("fill", backgroundColour);
+        svg.appendChild(maskRect);
+
+        //Axes
+
+        let xAxis = document.createElementNS(svgNamespace, "line");
+        xAxis.setAttribute("x1", signalStartX);
+        xAxis.setAttribute("x2", 100);
+        xAxis.setAttribute("y1", signalLow*positionNudge);
+        xAxis.setAttribute("y2", signalLow*positionNudge);
+        xAxis.setAttribute("stroke", textColour);
+        xAxis.setAttribute("stroke-width", axisStrokeWidth);
+        svg.appendChild(xAxis);
+
+        let yAxis = document.createElementNS(svgNamespace, "line");
+        yAxis.setAttribute("x1", signalStartX);
+        yAxis.setAttribute("x2", signalStartX);
+        yAxis.setAttribute("y1", signalHigh-5);
+        yAxis.setAttribute("y2", signalLow*positionNudge);
+        yAxis.setAttribute("stroke", textColour);
+        yAxis.setAttribute("stroke-width", axisStrokeWidth);
+        svg.appendChild(yAxis);
+
+        //Labels
+
+        const xAxisSVG = document.getElementById('xAxis');
+        
+        let timeLabel = document.createElementNS(svgNamespace, "text");
+        timeLabel.setAttribute("x", svgWidth/2);
+        timeLabel.setAttribute("y", signalLow+5);
+        timeLabel.setAttribute("fill", textColour);
+        timeLabel.setAttribute("font-size", labelSize);
+        timeLabel.innerHTML = "Time";
+        svg.appendChild(timeLabel);
+
+        const yAxisSVG = document.getElementById('yAxis');
+
+        let lowLabel = document.createElementNS(svgNamespace, "text");
+        lowLabel.setAttribute("x", 4);
+        lowLabel.setAttribute("y", signalLow+1);
+        lowLabel.setAttribute("fill", textColour);
+        lowLabel.setAttribute("font-size", labelSize);
+        lowLabel.innerHTML = "LOW";
+        svg.appendChild(lowLabel);
+
+        let highLabel = document.createElementNS(svgNamespace, "text");
+        highLabel.setAttribute("x", 4);
+        highLabel.setAttribute("y", signalHigh+1);
+        highLabel.setAttribute("fill", textColour);
+        highLabel.setAttribute("font-size", labelSize);
+        highLabel.innerHTML = "HIGH";
+        svg.appendChild(highLabel);
+
+        //Legend
+
+        const legend = document.getElementById("legend");
+
+        let pwmCircle = document.createElementNS(svgNamespace, "circle");
+        pwmCircle.setAttribute("cx", signalStartX+7);
+        pwmCircle.setAttribute("cy", signalLow+12);
+        pwmCircle.setAttribute("r", legendCircleRadius);
+        pwmCircle.setAttribute("fill", pwmLineColour);
+        svg.appendChild(pwmCircle);
+
+        let pwmLegendText = document.createElementNS(svgNamespace, "text");
+        pwmLegendText.setAttribute("x", signalStartX+7+legendCircleRadius+2);
+        pwmLegendText.setAttribute("y", signalLow+12+1.5);
+        pwmLegendText.setAttribute("fill", textColour);
+        pwmLegendText.setAttribute("font-size", legendTextSize);
+        pwmLegendText.innerHTML = "PWM Signal";
+        svg.appendChild(pwmLegendText);
+
+        let avgCircle = document.createElementNS(svgNamespace, "circle");
+        avgCircle.setAttribute("cx", signalStartX+7+legendCircleRadius+2+32);
+        avgCircle.setAttribute("cy", signalLow+12);
+        avgCircle.setAttribute("r", legendCircleRadius);
+        avgCircle.setAttribute("fill", avgLineColour);
+        svg.appendChild(avgCircle);
+
+        let avgLegendText = document.createElementNS(svgNamespace, "text");
+        avgLegendText.setAttribute("x", signalStartX+7+legendCircleRadius+2+32+legendCircleRadius+2);
+        avgLegendText.setAttribute("y", signalLow+12+1.5);
+        avgLegendText.setAttribute("fill", textColour);
+        avgLegendText.setAttribute("font-size", legendTextSize);
+        avgLegendText.innerHTML = "Average Signal";
+        svg.appendChild(avgLegendText);
+
+        function updatePWM() {
+            const dutyCycle = parseInt(dutySlider.value);
+            dutyValue.textContent = dutyCycle + "%";
+
+            const avgValue = dutyCycle / 100;
+            const avgLineY = signalLow - avgValue*(signalLow-signalHigh);
+            averageLine.setAttribute("y1", avgLineY);
+            averageLine.setAttribute("y2", avgLineY);
+
+            const onTime = (dutyCycle / 100) * periodWidth;
+            let pathData = "";
+
+            if (dutyCycle === 0) {
+                // For 0% duty cycle, draw a straight line at the bottom
+                pathData = `M ${signalStartX} ${signalLow} L ${fullSignalWidth} ${signalLow}`;
+            } else if (dutyCycle === 100) {
+                // For 100% duty cycle, draw a straight line at the top
+                pathData = `M ${signalStartX} ${signalHigh} L ${fullSignalWidth} ${signalHigh}`;
+            } else {
+                // For all other duty cycles
+                for (let x = -periodWidth - signalStartX; x < fullSignalWidth + periodWidth; x += periodWidth) {
+
+                    if(x < signalStartX)
+                        continue;
+
+                    const adjustedX = (x - offset) % fullSignalWidth;
+
+                    pathData += `M ${adjustedX} ${signalLow} `;
+                    if (onTime > 0) {
+                        pathData += `L ${adjustedX} ${signalHigh} `;
+                        pathData += `L ${adjustedX + onTime} ${signalHigh} `;
+                        if (onTime < periodWidth) {
+                            pathData += `L ${adjustedX + onTime} ${signalLow} `;
+                        }
+                    }
+                    if (onTime < periodWidth) {
+                        pathData += `L ${adjustedX + periodWidth} ${signalLow} `;
+                    }
+                }
+            }
+
+            pwmPath.setAttribute("d", pathData);
+        }
+
+        function animatePWM() {
+            offset = (offset - signalSpeed) % periodWidth;
+            //offset = 0;
+            updatePWM();
+            requestAnimationFrame(animatePWM);
+        }
+
+        dutySlider.addEventListener("input", updatePWM);
+        animatePWM();
+    </script>
+</body>
+</html>

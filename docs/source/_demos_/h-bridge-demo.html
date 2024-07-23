@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>H-Bridge Animation</title>
+        <style>
+            svg {
+                border: 1px solid #ccc;
+            }
+            .input_divs{
+                /* display:inline-block; */
+                /* margin: 0 auto; */
+                margin-left: 30px;
+                margin-right: 30px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                /* width: 40%; */
+                /* border: 1px solid #444; */
+            }
+            .checkbox{
+                width:20px;
+                height:20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="border-style: solid;margin-bottom: 30px;">
+            <div style="max-width: 500px;margin: 0 auto;padding:8px;">
+                <svg viewBox="0 0 100 100" id="pwmSvg" width="100%"></svg>
+            </div>
+            
+            <div style="font-size:x-large;width: 100%;margin:0 auto;display:flex;justify-content: center;align-items: center;">
+                <div class="input_divs">IN1 <input class="checkbox" id="in1Checkbox" type="checkbox"></div>
+                <div class="input_divs">IN2 <input class="checkbox" id="in2Checkbox" type="checkbox"></div>
+            </div>
+            
+        </div>
+
+        <script>
+            const svgNamespace = "http://www.w3.org/2000/svg";
+            const backgroundColour = "#111";
+            const textColour = "white";
+            const circuitColour = "white";
+            const positiveColour = "#fc350d";
+            const circuitStrokeWidth = 0.4;
+            const diagramTextSize = 5;
+            const signTextSize = 9;
+            const labelTextSize = 4;
+            const dotRadius = 1;
+
+            const svg = document.getElementById("pwmSvg");
+            const in1Checkbox = document.getElementById("in1Checkbox");
+            const in2Checkbox = document.getElementById("in2Checkbox");
+
+            let baseBackground = document.createElementNS(svgNamespace, "rect");
+            baseBackground.setAttribute("x", 0);
+            baseBackground.setAttribute("y", 0);
+            baseBackground.setAttribute("width", 100);
+            baseBackground.setAttribute("height", 100);
+            baseBackground.setAttribute("fill", backgroundColour);
+            svg.appendChild(baseBackground);
+
+            let vsLabel = document.createElementNS(svgNamespace, "text");
+            vsLabel.setAttribute("x", 48);
+            vsLabel.setAttribute("y", 5);
+            vsLabel.setAttribute("fill", positiveColour);
+            vsLabel.setAttribute("font-size", labelTextSize);
+            vsLabel.innerHTML = "Vs";
+            svg.appendChild(vsLabel);
+
+            let vsPath = document.createElementNS(svgNamespace, "path");
+            vsPath.setAttribute("d", "M 47 6 L 53 6 M 50 6 L 50 10");
+            vsPath.setAttribute("stroke", circuitColour);
+            vsPath.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(vsPath);
+
+            let groundPath = document.createElementNS(svgNamespace, "path");
+            groundPath.setAttribute("d", "M 50 90 L 50 93 M 47 93 L 53 93 M 48 94 L 52 94 M 49 95 L 51 95");
+            groundPath.setAttribute("stroke", circuitColour);
+            groundPath.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(groundPath);
+
+            let groundLabel = document.createElementNS(svgNamespace, "text");
+            groundLabel.setAttribute("x", 46);
+            groundLabel.setAttribute("y", 99);
+            groundLabel.setAttribute("fill", textColour);
+            groundLabel.setAttribute("font-size", labelTextSize);
+            groundLabel.innerHTML = "GND";
+            svg.appendChild(groundLabel);
+
+            let sPath = document.createElementNS(svgNamespace, "path");
+            sPath.setAttribute("d", "M 50 10 L 10 10 L 10 25 M 10 35 L 10 50 M 90 50 L 90 65 M 90 75 L 90 90 L 50 90");
+            sPath.setAttribute("stroke", circuitColour);
+            sPath.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(sPath);
+
+            let zPath = document.createElementNS(svgNamespace, "path");
+            zPath.setAttribute("d", "M 50 10 L 90 10 L 90 25 M 90 35 L 90 50 M 10 50 L 10 65 M 10 75 L 10 90 L 50 90");
+            zPath.setAttribute("stroke", circuitColour);
+            zPath.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(zPath);
+
+            let midPath = document.createElementNS(svgNamespace, "path");
+            midPath.setAttribute("d", "M 10 50 L 42 50 M 58 50 L 90 50");
+            midPath.setAttribute("stroke", circuitColour);
+            midPath.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(midPath);
+
+            let motorCircle = document.createElementNS(svgNamespace, "circle");
+            motorCircle.setAttribute("cx", 50);
+            motorCircle.setAttribute("cy", 50);
+            motorCircle.setAttribute("r", 8);
+            motorCircle.setAttribute("stroke", circuitColour);
+            motorCircle.setAttribute("stroke-width", circuitStrokeWidth);
+            svg.appendChild(motorCircle);
+
+            let arrow = document.createElementNS(svgNamespace, "path");
+            // arrow.setAttribute("d", "M 55 50 A 5 5 0 1 0 50 45 L 49 51 M 50 45 L 51 51");
+            arrow.setAttribute("d", "M 45 50 A 5 5 0 1 0 50 45 M 45 50 L 44 51 M 45 50 L 46 51");
+            arrow.setAttribute("stroke", circuitColour);
+            arrow.setAttribute("stroke-width", circuitStrokeWidth);
+            arrow.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"2s\" type=\"rotate\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"/>";
+            arrow.setAttribute("visibility", "hidden");
+            svg.appendChild(arrow);
+
+            let antiArrow = document.createElementNS(svgNamespace, "path");
+            antiArrow.setAttribute("d", "M 50 45 A 5 5 0 1 0 55 50 L 54 51 M 55 50 L 56 51");
+            antiArrow.setAttribute("stroke", circuitColour);
+            antiArrow.setAttribute("stroke-width", circuitStrokeWidth);
+            antiArrow.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"2s\" type=\"rotate\" from=\"360 50 50\" to=\"0 50 50\" repeatCount=\"indefinite\"/>";
+            antiArrow.setAttribute("visibility", "hidden");
+            svg.appendChild(antiArrow);
+
+            let motorText = document.createElementNS(svgNamespace, "text");
+            motorText.setAttribute("x", 47.8);
+            motorText.setAttribute("y", 51.5);
+            motorText.setAttribute("fill", textColour);
+            motorText.setAttribute("font-size", diagramTextSize);
+            motorText.innerHTML = "M";
+            svg.appendChild(motorText);
+
+            let clockwisePlusText = document.createElementNS(svgNamespace, "text");
+            clockwisePlusText.setAttribute("x", 35);
+            clockwisePlusText.setAttribute("y", 48);
+            clockwisePlusText.setAttribute("fill", positiveColour);
+            clockwisePlusText.setAttribute("font-size", signTextSize);
+            clockwisePlusText.setAttribute("font-weight", "bold");
+            clockwisePlusText.innerHTML = "+";
+            clockwisePlusText.setAttribute("visibility", "hidden");
+            svg.appendChild(clockwisePlusText);
+
+            let antiClockwisePlusText = document.createElementNS(svgNamespace, "text");
+            antiClockwisePlusText.setAttribute("x", 60);
+            antiClockwisePlusText.setAttribute("y", 48);
+            antiClockwisePlusText.setAttribute("fill", positiveColour);
+            antiClockwisePlusText.setAttribute("font-size", signTextSize);
+            antiClockwisePlusText.setAttribute("font-weight", "bold");
+            antiClockwisePlusText.innerHTML = "+";
+            antiClockwisePlusText.setAttribute("visibility", "hidden");
+            svg.appendChild(antiClockwisePlusText);
+
+            let clockwiseMinusText = document.createElementNS(svgNamespace, "text");
+            clockwiseMinusText.setAttribute("x", 60);
+            clockwiseMinusText.setAttribute("y", 48);
+            clockwiseMinusText.setAttribute("fill", textColour);
+            clockwiseMinusText.setAttribute("font-size", signTextSize);
+            clockwiseMinusText.setAttribute("font-weight", "bold");
+            clockwiseMinusText.innerHTML = "-";
+            clockwiseMinusText.setAttribute("visibility", "hidden");
+            svg.appendChild(clockwiseMinusText);
+
+            let antiClockwiseMinusText = document.createElementNS(svgNamespace, "text");
+            antiClockwiseMinusText.setAttribute("x", 35);
+            antiClockwiseMinusText.setAttribute("y", 48);
+            antiClockwiseMinusText.setAttribute("fill", textColour);
+            antiClockwiseMinusText.setAttribute("font-size", signTextSize);
+            antiClockwiseMinusText.setAttribute("font-weight", "bold");
+            antiClockwiseMinusText.innerHTML = "-";
+            antiClockwiseMinusText.setAttribute("visibility", "hidden");
+            svg.appendChild(antiClockwiseMinusText);
+
+            //Switches
+            let topLeftSwitch = document.createElementNS(svgNamespace, "line");
+            topLeftSwitch.setAttribute("stroke", circuitColour);
+            topLeftSwitch.setAttribute("stroke-width", circuitStrokeWidth);
+            topLeftSwitch.setAttribute("x1", 10);
+            topLeftSwitch.setAttribute("y1", 25);
+            topLeftSwitch.setAttribute("x2", 10);
+            topLeftSwitch.setAttribute("y2", 35);
+            topLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 10 25\" to=\"20 10 25\" fill=\"freeze\"/>";
+            svg.appendChild(topLeftSwitch);
+
+            let topRightSwitch = document.createElementNS(svgNamespace, "line");
+            topRightSwitch.setAttribute("stroke", circuitColour);
+            topRightSwitch.setAttribute("stroke-width", circuitStrokeWidth);
+            topRightSwitch.setAttribute("x1", 90);
+            topRightSwitch.setAttribute("y1", 25);
+            topRightSwitch.setAttribute("x2", 90);
+            topRightSwitch.setAttribute("y2", 35);
+            topRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 90 25\" to=\"20 90 25\" fill=\"freeze\"/>";
+            svg.appendChild(topRightSwitch);
+
+            let bottomLeftSwitch = document.createElementNS(svgNamespace, "line");
+            bottomLeftSwitch.setAttribute("stroke", circuitColour);
+            bottomLeftSwitch.setAttribute("stroke-width", circuitStrokeWidth);
+            bottomLeftSwitch.setAttribute("x1", 10);
+            bottomLeftSwitch.setAttribute("y1", 65);
+            bottomLeftSwitch.setAttribute("x2", 10);
+            bottomLeftSwitch.setAttribute("y2", 75);
+            bottomLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 10 65\" to=\"20 10 65\" fill=\"freeze\"/>";
+            svg.appendChild(topRightSwitch);
+            svg.appendChild(bottomLeftSwitch);
+
+            let bottomRightSwitch = document.createElementNS(svgNamespace, "line");
+            bottomRightSwitch.setAttribute("stroke", circuitColour);
+            bottomRightSwitch.setAttribute("stroke-width", circuitStrokeWidth);
+            bottomRightSwitch.setAttribute("x1", 90);
+            bottomRightSwitch.setAttribute("y1", 65);
+            bottomRightSwitch.setAttribute("x2", 90);
+            bottomRightSwitch.setAttribute("y2", 75);
+            bottomRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 90 65\" to=\"20 90 65\" fill=\"freeze\"/>";
+            svg.appendChild(bottomRightSwitch);
+
+
+            //Circles
+
+            let topCircle = document.createElementNS(svgNamespace, "circle");
+            topCircle.setAttribute("cx", 50);
+            topCircle.setAttribute("cy", 10);
+            topCircle.setAttribute("r", dotRadius);
+            topCircle.setAttribute("fill", circuitColour);
+            svg.appendChild(topCircle);
+
+            let bottomCircle = document.createElementNS(svgNamespace, "circle");
+            bottomCircle.setAttribute("cx", 50);
+            bottomCircle.setAttribute("cy", 90);
+            bottomCircle.setAttribute("r", dotRadius);
+            bottomCircle.setAttribute("fill", circuitColour);
+            svg.appendChild(bottomCircle);
+
+            let leftCircle1 = document.createElementNS(svgNamespace, "circle")
+            leftCircle1.setAttribute("cx", 10);
+            leftCircle1.setAttribute("cy", 25);
+            leftCircle1.setAttribute("r", dotRadius);
+            leftCircle1.setAttribute("fill", circuitColour);
+            svg.appendChild(leftCircle1);
+
+            let leftCircle2 = document.createElementNS(svgNamespace, "circle")
+            leftCircle2.setAttribute("cx", 10);
+            leftCircle2.setAttribute("cy", 35);
+            leftCircle2.setAttribute("r", dotRadius);
+            leftCircle2.setAttribute("fill", circuitColour);
+            svg.appendChild(leftCircle2);
+
+            let leftCircle3 = document.createElementNS(svgNamespace, "circle")
+            leftCircle3.setAttribute("cx", 10);
+            leftCircle3.setAttribute("cy", 65);
+            leftCircle3.setAttribute("r", dotRadius);
+            leftCircle3.setAttribute("fill", circuitColour);
+            svg.appendChild(leftCircle3);
+
+            let leftCircle4 = document.createElementNS(svgNamespace, "circle")
+            leftCircle4.setAttribute("cx", 10);
+            leftCircle4.setAttribute("cy", 75);
+            leftCircle4.setAttribute("r", dotRadius);
+            leftCircle4.setAttribute("fill", circuitColour);
+            svg.appendChild(leftCircle4);
+
+            let rightCircle1 = document.createElementNS(svgNamespace, "circle")
+            rightCircle1.setAttribute("cx", 90);
+            rightCircle1.setAttribute("cy", 25);
+            rightCircle1.setAttribute("r", dotRadius);
+            rightCircle1.setAttribute("fill", circuitColour);
+            svg.appendChild(rightCircle1);
+
+            let rightCircle2 = document.createElementNS(svgNamespace, "circle")
+            rightCircle2.setAttribute("cx", 90);
+            rightCircle2.setAttribute("cy", 35);
+            rightCircle2.setAttribute("r", dotRadius);
+            rightCircle2.setAttribute("fill", circuitColour);
+            svg.appendChild(rightCircle2);
+
+            let rightCircle3 = document.createElementNS(svgNamespace, "circle")
+            rightCircle3.setAttribute("cx", 90);
+            rightCircle3.setAttribute("cy", 65);
+            rightCircle3.setAttribute("r", dotRadius);
+            rightCircle3.setAttribute("fill", circuitColour);
+            svg.appendChild(rightCircle3);
+
+            let rightCircle4 = document.createElementNS(svgNamespace, "circle")
+            rightCircle4.setAttribute("cx", 90);
+            rightCircle4.setAttribute("cy", 75);
+            rightCircle4.setAttribute("r", dotRadius);
+            rightCircle4.setAttribute("fill", circuitColour);
+            svg.appendChild(rightCircle4);
+            
+            function setIN1Animation(box1Checked)
+            {
+                if(box1Checked)
+                {
+                    topLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"20 10 25\" to=\"0 10 25\" fill=\"freeze\"/>";
+
+                    bottomRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"20 90 65\" to=\"0 90 65\" fill=\"freeze\"/>";
+                }
+                else
+                {
+                    topLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 10 25\" to=\"20 10 25\" fill=\"freeze\"/>";
+
+                    bottomRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 90 65\" to=\"20 90 65\" fill=\"freeze\"/>";   
+                }
+
+                topLeftSwitch.children[0].beginElement();
+                bottomRightSwitch.children[0].beginElement();
+            }
+
+            function setIN2Animation(box2Checked)
+            {
+                if(box2Checked)
+                {
+                    topRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"20 90 25\" to=\"0 90 25\" fill=\"freeze\"/>";
+
+                    bottomLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"20 10 65\" to=\"0 10 65\" fill=\"freeze\"/>";
+                }
+                else
+                {
+                    topRightSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 90 25\" to=\"20 90 25\" fill=\"freeze\"/>";
+
+                    bottomLeftSwitch.innerHTML = "<animateTransform attributeName=\"transform\" begin=\"0s\" dur=\"0.15s\" type=\"rotate\" from=\"0 10 65\" to=\"20 10 65\" fill=\"freeze\"/>";
+                }
+
+                topRightSwitch.children[0].beginElement();
+                bottomLeftSwitch.children[0].beginElement();
+            }
+
+            function setCircuitAnimation(in1Checked, in2Checked)
+            {
+                if(in1Checked === in2Checked)
+                {
+                    //stop all animations
+                    vsPath.setAttribute("stroke", circuitColour);
+                    midPath.setAttribute("stroke", circuitColour);
+                    motorCircle.setAttribute("stroke", circuitColour);
+
+                    sPath.setAttribute("stroke", circuitColour);
+                    zPath.setAttribute("stroke", circuitColour);
+
+                    topLeftSwitch.setAttribute("stroke", circuitColour);
+                    bottomLeftSwitch.setAttribute("stroke", circuitColour);
+                    topRightSwitch.setAttribute("stroke", circuitColour);
+                    bottomRightSwitch.setAttribute("stroke", circuitColour);
+
+                    topCircle.setAttribute("fill", circuitColour);
+                    bottomCircle.setAttribute("fill", circuitColour);
+
+                    leftCircle1.setAttribute("fill", circuitColour);
+                    leftCircle2.setAttribute("fill", circuitColour);
+                    leftCircle3.setAttribute("fill", circuitColour);
+                    leftCircle4.setAttribute("fill", circuitColour);
+
+                    rightCircle1.setAttribute("fill", circuitColour);
+                    rightCircle2.setAttribute("fill", circuitColour);
+                    rightCircle3.setAttribute("fill", circuitColour);
+                    rightCircle4.setAttribute("fill", circuitColour);
+
+                    arrow.setAttribute("visibility", "hidden");
+                    antiArrow.setAttribute("visibility", "hidden");
+
+                    clockwisePlusText.setAttribute("visibility", "hidden");
+                    antiClockwisePlusText.setAttribute("visibility", "hidden");
+                    clockwiseMinusText.setAttribute("visibility", "hidden");
+                    antiClockwiseMinusText.setAttribute("visibility", "hidden");
+                }
+                else
+                {
+                    vsPath.setAttribute("stroke", positiveColour);
+                    midPath.setAttribute("stroke", positiveColour);
+                    motorCircle.setAttribute("stroke", positiveColour);
+
+                    topCircle.setAttribute("fill", positiveColour);
+                    bottomCircle.setAttribute("fill", positiveColour);
+
+                    if(in1Checked)
+                    {
+                        sPath.setAttribute("stroke", positiveColour);
+
+                        topLeftSwitch.setAttribute("stroke", positiveColour);
+                        bottomLeftSwitch.setAttribute("stroke", circuitColour);
+                        topRightSwitch.setAttribute("stroke", circuitColour);
+                        bottomRightSwitch.setAttribute("stroke", positiveColour);
+
+                        leftCircle1.setAttribute("fill", positiveColour);
+                        leftCircle2.setAttribute("fill", positiveColour);
+
+                        rightCircle3.setAttribute("fill", positiveColour);
+                        rightCircle4.setAttribute("fill", positiveColour);
+
+                        arrow.setAttribute("visibility", "visible");
+
+                        clockwisePlusText.setAttribute("visibility", "visible");
+                        clockwiseMinusText.setAttribute("visibility", "visible");
+                    }
+                    else
+                    {
+                        zPath.setAttribute("stroke", positiveColour);
+
+                        topLeftSwitch.setAttribute("stroke", circuitColour);
+                        bottomLeftSwitch.setAttribute("stroke", positiveColour);
+                        topRightSwitch.setAttribute("stroke", positiveColour);
+                        bottomRightSwitch.setAttribute("stroke", circuitColour);
+
+                        leftCircle3.setAttribute("fill", positiveColour);
+                        leftCircle4.setAttribute("fill", positiveColour);
+
+                        rightCircle1.setAttribute("fill", positiveColour);
+                        rightCircle2.setAttribute("fill", positiveColour);
+                        
+                        antiArrow.setAttribute("visibility", "visible");
+
+                        antiClockwisePlusText.setAttribute("visibility", "visible");
+                        antiClockwiseMinusText.setAttribute("visibility", "visible");
+                    }
+                }
+            }
+
+            in1Checkbox.addEventListener('change', function(){
+                setIN1Animation(this.checked);
+                setCircuitAnimation(this.checked, in2Checkbox.checked);
+            });
+
+            in2Checkbox.addEventListener('change', function(){
+                setIN2Animation(this.checked);
+                setCircuitAnimation(in1Checkbox.checked, this.checked);
+            });
+        </script>
+    </body>
+</html>
