@@ -7,7 +7,7 @@ copyright = '2024, Mthokozisi \'Hap\' Sibanda'
 author = 'Mthokozisi \'Hap\' Sibanda'
 
 release = '1.0'
-version = '1.0.0'
+version = '1.0.1'
 
 # -- General configuration
 
