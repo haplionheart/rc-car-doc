@@ -74,3 +74,8 @@ Speed Control and PWM
 What if we want to control the speed of the motors? We would need to vary the voltage level used to power the motors, meaning we need to somehow send a value that is between HIGH and LOW. We can do this using a technique called Pulse Width Modulation (PWM). PWM is a technique where we switch between HIGH and LOW signals at very fast speeds (*hundreds or even thousands of times per second*). This creates an effect similar to sending the averaged value of the HIGH and LOW signals. 
 
 By varying the duty cycle (the percentage of time that the signal is HIGH vs LOW), we can affect what the averaged value of the signal is. For example, if the microcontroller sends a HIGH signal as 5V and a LOW signal as 0V, then a PWM signal with a 25\% duty cycle would be equivalent to sending 1.25V.
+
+The interactive demo below shows how the PWM signal's average value changes with the duty cycle.
+
+.. raw:: html
+    :file: ../_demos_/pwm-demo.html

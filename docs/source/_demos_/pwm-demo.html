@@ -11,15 +11,18 @@
     </style>
 </head>
 <body>
-    <div style="border-style: solid;">
-        <div style="max-width: 500px;">
+    <div style="border-style: solid;margin-bottom: 30px;">
+        <div style="max-width: 500px;margin: 0 auto;padding:8px;">
             <svg viewBox="0 0 100 100" id="pwmSvg" width="100%"></svg>
         </div>
+        <div style="font-size:x-large;width: 100%;margin:0 auto;display:flex;justify-content: center;align-items: center;">
+            <div>
+                Duty Cycle
+                <input type="range" id="dutySlider" min="0" max="100" value="50">
+                <span id="dutyValue">50%</span>
+            </div>
+        </div>
         
-        <br>
-        Duty Cycle
-        <input type="range" id="dutySlider" min="0" max="100" value="50">
-        <span id="dutyValue">50%</span>
     </div>
 
     <script>
